@@ -1,0 +1,64 @@
+import { ValidationPipe } from '@nestjs/common';
+import { NestFactory } from '@nestjs/core';
+import { VersioningType } from '@nestjs/common';
+import { AppModule } from './app.module';
+import { ForbiddenFilter } from './common/filters/forbidden.filter';
+import * as bodyParser from 'body-parser';
+import { NestExpressApplication } from '@nestjs/platform-express';
+
+// Establecer la zona horaria para toda la app
+process.env.TZ = 'America/Bogota';
+
+async function bootstrap() {
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+
+  app.use(bodyParser.json({ limit: '50mb' }));
+  app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
+
+  // Versioning
+  app.enableVersioning({
+    type: VersioningType.URI,
+    defaultVersion: '1',
+    prefix: 'v',
+  });
+
+  // Global prefix
+  app.setGlobalPrefix('api');
+
+  // Validaciones
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      transform: true,
+    })
+  );
+
+  // CORS
+  app.enableCors({
+    origin: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: [
+      'Content-Type',
+      'Authorization',
+      'x-tenant-id',
+      'X-Skip-Tenant',
+    ],
+    exposedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
+    preflightContinue: false,
+    optionsSuccessStatus: 204,
+  });
+
+  // Filtros globales
+  app.useGlobalFilters(new ForbiddenFilter());
+
+  console.log('🚀 UVirtual API Configurada:');
+  console.log('   - Versioning: URI (v1, v2, etc.)');
+  console.log('   - Global Prefix: /api');
+  console.log('   - Rutas disponibles: /api/v1/*, /api/v2/*, etc.');
+  console.log('   - Zona horaria: America/Bogota');
+
+  await app.listen(process.env.PORT ?? 3000);
+}
+
+bootstrap();
