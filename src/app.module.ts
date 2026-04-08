@@ -25,10 +25,13 @@ import { LoginAttempt } from './api/v1/auth/entities/login-attempt.entity';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/adapters/handlebars.adapter';
 
+import { validateEnv } from './core/config/env.config';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      validate: validateEnv,
     }),
 
     JwtModule.registerAsync({
