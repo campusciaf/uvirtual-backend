@@ -1,5 +1,5 @@
 import { Injectable, OnModuleDestroy } from '@nestjs/common';
-import { DataSource } from 'typeorm';
+import { DataSource, ILike } from 'typeorm';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { Tenant } from './entities/tenant.entity';
 
@@ -25,7 +25,8 @@ export class TenancyService implements OnModuleDestroy {
 
     const initPromise = (async () => {
       const tenantRepo = this.managementDataSource.getRepository(Tenant);
-      const tenant = await tenantRepo.findOne({ where: { code: tenantCode } });
+      const normalizedCode = tenantCode.trim().toLowerCase();
+      const tenant = await tenantRepo.findOne({ where: { code: ILike(normalizedCode) } });
 
       if (!tenant) {
         this.initPromises.delete(tenantCode);

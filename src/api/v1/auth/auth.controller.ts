@@ -8,7 +8,7 @@ import { AuthService } from './auth.service';
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
-  ) {}
+  ) { }
 
   @Post('login')
   async login(
@@ -18,6 +18,8 @@ export class AuthController {
     if (!tenantId) {
       throw new UnauthorizedException('El header x-tenant-id es obligatorio');
     }
+    console.log("el id del tenant es ", tenantId);
+
     return this.authService.login(body.email, body.password, tenantId);
   }
 

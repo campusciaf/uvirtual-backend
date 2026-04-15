@@ -1,6 +1,6 @@
 import { Injectable, OnModuleDestroy, Logger, Inject } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
-import { DataSource, DataSourceOptions } from 'typeorm';
+import { DataSource, DataSourceOptions, ILike } from 'typeorm';
 import { Tenant } from '../entities/tenant.entity';
 
 @Injectable()
@@ -26,7 +26,7 @@ export class TenantConnectionPool implements OnModuleDestroy {
 
     const tenant = await this.adminConnection
       .getRepository(Tenant)
-      .findOne({ where: { code: tenantCode, is_active: true } });
+      .findOne({ where: { code: ILike(tenantCode.trim()), is_active: true } });
 
     if (!tenant) {
       throw new Error(`Tenant ${tenantCode} not found`);

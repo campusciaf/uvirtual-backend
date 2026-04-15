@@ -28,6 +28,7 @@ export class AuthService {
   }
 
   async login(email: string, password: string, tenantId: string) {
+    console.log(tenantId);
     const attempt = await this.loginAttemptsRepo.findOne({ where: { email } });
 
     if (attempt?.blockedUntil) {

@@ -9,7 +9,7 @@ import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { MODULE_ACCESS_KEY } from 'src/common/decorators/module-access.decorator';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, ILike } from 'typeorm';
 import { ModulesTenant } from 'src/core/tenant/entities/modules-tenants.entity';
 import { Module } from 'src/core/tenant/entities/modules.entity';
 import { Tenant } from '../tenant/entities/tenant.entity';
@@ -80,7 +80,7 @@ export class TenantModuleGuard implements CanActivate {
     }
 
     const tenant = await this.tenantRepo.findOne({
-      where: { code: tenantId, is_active: true },
+      where: { code: ILike(tenantId.trim()), is_active: true },
     });
 
     if (!tenant) {
