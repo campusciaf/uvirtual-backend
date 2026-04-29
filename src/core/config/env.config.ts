@@ -17,6 +17,11 @@ export const envSchema = z.object({
   EMAIL_PORT: z.coerce.number().optional(),
   EMAIL_SECURE: z.coerce.boolean().optional().default(false),
   EMAIL_FROM_NAME: z.string().optional(),
+
+  AWS_REGION: z.string().optional(),
+  AWS_ACCESS_KEY_ID: z.string().optional(),
+  AWS_SECRET_ACCESS_KEY: z.string().optional(),
+  AWS_S3_BUCKET_NAME: z.string().optional(),
 });
 
 export type EnvConfig = z.infer<typeof envSchema>;

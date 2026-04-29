@@ -5,16 +5,22 @@ import { UsersModule } from './users/users.module';
 import { RolesModule } from './roles/roles.module';
 import { CaslModule } from './auth/casl/casl.module';
 import { PermissionModule } from './permission/permission.module';
+import { ProgramsModule } from './programs/programs.module';
+import { CoursesModule } from './courses/courses.module';
+import { CommonModule } from './common/common.module';
 
 @Module({
   imports: [
+    CommonModule,
     CaslModule,
     PermissionModule,
     AuthModule,
     UsersModule,
     RolesModule,
+    ProgramsModule,
+    CoursesModule,
   ],
   controllers: [],
   providers: [],
 })
-export class ApiV1Module {}
+export class ApiV1Module { }

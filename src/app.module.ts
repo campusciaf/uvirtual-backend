@@ -24,6 +24,7 @@ import { CaslModule } from './api/v1/auth/casl/casl.module';
 import { LoginAttempt } from './api/v1/auth/entities/login-attempt.entity';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/adapters/handlebars.adapter';
+import awsConfig from './api/v1/common/s3/config/aws.config';
 
 import { validateEnv } from './core/config/env.config';
 
@@ -32,6 +33,7 @@ import { validateEnv } from './core/config/env.config';
     ConfigModule.forRoot({
       isGlobal: true,
       validate: validateEnv,
+      load: [awsConfig],
     }),
 
     JwtModule.registerAsync({
