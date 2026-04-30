@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity('programs')
 export class Programs {
@@ -17,15 +17,18 @@ export class Programs {
   @Column({ name: 'modality', type: 'enum', enum: ['PRESENTIAL', 'VIRTUAL', 'MIXED'] })
   modality: string;
 
+  // @Column({ name: 'methodology', type: 'varchar' })
+  // methodology: string;
+
   @Column({ name: 'titration_type', type: 'enum', enum: ['PROPEDEUTIC', 'SINGLE_CYCLE'] })
   titration_type: string;
 
   @Column({ name: 'state', type: 'boolean' })
   state: boolean;
 
-  @Column({ name: 'created_at', type: 'timestamp' })
+  @CreateDateColumn({ name: 'created_at', type: 'timestamp' })
   created_at: Date;
 
-  @Column({ name: 'updated_at', type: 'timestamp' })
+  @UpdateDateColumn({ name: 'updated_at', type: 'timestamp' })
   updated_at: Date;
 }
