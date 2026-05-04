@@ -5,15 +5,7 @@ export enum CourseType {
   ELECTIVE = 'ELECTIVE'
 }
 
-export class CreateCourseDto {
-  @IsNotEmpty()
-  @IsString()
-  program_level_id: string;
-  
-  @IsOptional()
-  @IsString()
-  catalog_id?: string;
-
+export class CreateCourseCatalogDto {
   @IsNotEmpty()
   @IsString()
   code: string;
@@ -39,16 +31,6 @@ export class CreateCourseDto {
   @IsNotEmpty()
   @IsEnum(CourseType)
   type: string;
-
-  @IsNotEmpty()
-  @IsInt()
-  @Min(1)
-  order: number;
-
-  @IsNotEmpty()
-  @IsInt()
-  @Min(1)
-  semester: number;
 
   @IsOptional()
   @IsBoolean()

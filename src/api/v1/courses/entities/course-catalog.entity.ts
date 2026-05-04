@@ -1,15 +1,9 @@
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
-@Entity('courses')
-export class Course {
+@Entity('courses_catalog')
+export class CourseCatalog {
   @PrimaryGeneratedColumn('uuid')
   id: string;
-
-  @Column({ name: 'program_level_id', type: 'uuid' })
-  program_level_id: string;
-
-  @Column({ name: 'catalog_id', type: 'uuid', nullable: true })
-  catalog_id: string | null;
 
   @Column({ name: 'code', type: 'varchar' })
   code: string;
@@ -17,7 +11,7 @@ export class Course {
   @Column({ name: 'name', type: 'varchar' })
   name: string;
 
-  @Column({ name: 'image_url', type: 'varchar' })
+  @Column({ name: 'image_url', type: 'varchar', nullable: true })
   image_url: string;
 
   @Column({ name: 'credits', type: 'int' })
@@ -29,13 +23,7 @@ export class Course {
   @Column({ name: 'type', type: 'enum', enum: ['OBLIGATORY', 'ELECTIVE'] })
   type: string;
 
-  @Column({ name: 'order', type: 'int' })
-  order: number;
-
-  @Column({ name: 'semester', type: 'int' })
-  semester: number;
-
-  @Column({ name: 'status', type: 'boolean' })
+  @Column({ name: 'status', type: 'boolean', default: true })
   status: boolean;
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamp' })

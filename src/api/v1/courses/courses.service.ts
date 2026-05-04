@@ -17,7 +17,13 @@ export class CoursesService {
     private readonly dataSource: DataSource,
     private readonly s3Service: S3Service
   ) {}
-
+  private mapTypeToFront(t: string): string {
+    switch(t) {
+      case 'OBLIGATORY': return 'obligatoria';
+      case 'ELECTIVE': return 'electiva';
+      default: return t?.toLowerCase();
+    }
+  }
   async findByLevel(programLevelId: string) {
     const courses = await this.courseRepo.find({
       where: { program_level_id: programLevelId },
@@ -37,7 +43,7 @@ export class CoursesService {
         semestre: c.semester,
         creditos: c.credits,
         horas_totales: c.total_hours,
-        tipo: c.type.toLowerCase(),
+        tipo: this.mapTypeToFront(c.type),
         orden: c.order,
         estado: c.status ? 'activa' : 'inactiva',
         total_prerrequisitos: prereqs
@@ -62,7 +68,7 @@ export class CoursesService {
       semestre: c.semester,
       creditos: c.credits,
       horas_totales: c.total_hours,
-      tipo: c.type.toLowerCase(),
+      tipo: this.mapTypeToFront(c.type),
       orden: c.order,
       estado: c.status ? 'activa' : 'inactiva',
       prerrequisito_ids: prereqs.map(p => p.prerequisite_id)
@@ -81,6 +87,7 @@ export class CoursesService {
 
     const course = this.courseRepo.create({
       program_level_id: createCourseDto.program_level_id,
+      catalog_id: createCourseDto.catalog_id || null,
       code: createCourseDto.code,
       name: createCourseDto.name,
       image_url: createCourseDto.image_url || '',

@@ -15,7 +15,22 @@ export class ProgramsService {
     private readonly programsLevelRepo: Repository<ProgramsLevel>,
     private readonly dataSource: DataSource
   ) { }
+  private mapModalityToFront(m: string): string {
+    switch(m) {
+      case 'PRESENTIAL': return 'presencial';
+      case 'VIRTUAL': return 'virtual';
+      case 'MIXED': return 'mixta';
+      default: return m?.toLowerCase();
+    }
+  }
 
+  private mapTitrationToFront(t: string): string {
+    switch(t) {
+      case 'PROPEDEUTIC': return 'propedeutico';
+      case 'SINGLE_CYCLE': return 'ciclo_unico';
+      default: return t?.toLowerCase();
+    }
+  }
   async findAll() {
     const programs = await this.programsRepo
       .createQueryBuilder('p')
@@ -31,9 +46,9 @@ export class ProgramsService {
         codigo: p.code,
         nombre: p.name,
         area_conocimiento: p.area_knowledge,
-        modalidad: p.modality?.toLowerCase(),
+        modalidad: this.mapModalityToFront(p.modality),
         // metodologia: p.methodology,
-        tipo_titulacion: p.titration_type?.toLowerCase(),
+        tipo_titulacion: this.mapTitrationToFront(p.titration_type),
         estado: p.state ? 'activo' : 'inactivo',
         total_niveles: sortedLevels.length,
         niveles: sortedLevels.length > 0
@@ -68,11 +83,11 @@ export class ProgramsService {
       codigo: program.code,
       nombre: program.name,
       area_conocimiento: program.area_knowledge,
-      modalidad: program.modality?.toLowerCase(),
+      modalidad: this.mapModalityToFront(program.modality),
       // metodologia: program.methodology,
-      tipo_titulacion: program.titration_type?.toLowerCase(),
+      tipo_titulacion: this.mapTitrationToFront(program.titration_type),
       estado: program.state ? 'activo' : 'inactivo',
-      niveles: levels.map(l => ({
+      niveles_data: levels.map(l => ({
         id: l.id,
         nivel: l.level,
         orden: l.order,
