@@ -8,8 +8,8 @@ export class ProgramsLevel {
   @Column({ name: 'program_id', type: 'uuid' })
   program_id: string;
 
-  @Column({ name: 'level', type: 'int' })
-  level: number;
+  @Column({ name: 'level', type: 'varchar' })
+  level: string;
 
   @Column({ name: 'order', type: 'int' })
   order: number;

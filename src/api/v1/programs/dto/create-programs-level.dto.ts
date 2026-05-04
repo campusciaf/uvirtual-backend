@@ -2,9 +2,8 @@ import { IsBoolean, IsEnum, IsInt, IsNotEmpty, IsOptional, IsString, Min } from 
 
 export class CreateProgramsLevelDto {
   @IsNotEmpty()
-  @IsInt()
-  @Min(1)
-  level: number;
+  @IsString()
+  level: string;
 
   @IsNotEmpty()
   @IsInt()
