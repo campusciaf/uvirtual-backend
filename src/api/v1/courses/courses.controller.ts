@@ -13,6 +13,12 @@ export class CoursesController {
     const data = await this.coursesService.findByLevel(levelId);
     return { success: true, data, error: null };
   }
+  
+  @Get('catalog/:modality')
+  async listarCatalogo(@Param('modality') modality: string) {
+    const data = await this.coursesService.findCatalog(modality);
+    return { success: true, data, error: null };
+  }
 
   @Get(':id')
   async buscar(@Param('id') id: string) {

@@ -8,7 +8,6 @@ import { PermissionModule } from './permission/permission.module';
 import { ProgramsModule } from './programs/programs.module';
 import { CoursesModule } from './courses/courses.module';
 import { CommonModule } from './common/common.module';
-import { CoursesCatalogModule } from './courses/courses-catalog.module';
 
 @Module({
   imports: [
@@ -19,9 +18,7 @@ import { CoursesCatalogModule } from './courses/courses-catalog.module';
     UsersModule,
     RolesModule,
     ProgramsModule,
-    CoursesModule,    
-    CoursesCatalogModule,
-
+    CoursesModule,
   ],
   controllers: [],
   providers: [],

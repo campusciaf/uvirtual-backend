@@ -26,12 +26,34 @@ async function bootstrap() {
   app.setGlobalPrefix('api');
 
   // Validaciones
+  // app.useGlobalPipes(
+  //   new ValidationPipe({
+  //     whitelist: true,
+  //     transform: true,
+  //   })
+  // );
   app.useGlobalPipes(
-    new ValidationPipe({
-      whitelist: true,
-      transform: true,
-    })
-  );
+  new ValidationPipe({
+    whitelist: true,
+    transform: true,
+    stopAtFirstError: true,
+    exceptionFactory: (errors) => {
+      const findFirstMessage = (errs: any[]): string => {
+        for (const e of errs) {
+          if (e.constraints) {
+            return Object.values(e.constraints)[0] as string;
+          }
+          if (e.children && e.children.length > 0) {
+            const child = findFirstMessage(e.children);
+            if (child) return child;
+          }
+        }
+        return 'Error de validación';
+      };
+      return new (require('@nestjs/common').BadRequestException)(findFirstMessage(errors));
+    }
+  })
+);
 
   // CORS
   app.enableCors({

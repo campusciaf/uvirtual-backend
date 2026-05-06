@@ -38,6 +38,9 @@ export class Course {
   @Column({ name: 'status', type: 'boolean' })
   status: boolean;
 
+  @Column({ name: 'modality', type: 'enum', enum: ['PRESENTIAL', 'VIRTUAL', 'MIXED'] })
+  modality: string;
+
   @CreateDateColumn({ name: 'created_at', type: 'timestamp' })
   created_at: Date;
 
