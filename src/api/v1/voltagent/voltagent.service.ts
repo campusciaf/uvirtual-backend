@@ -5,22 +5,7 @@ import { createVoltAgentApp } from "@voltagent/server-hono";
 import type { Hono } from "hono";
 import { z } from "zod";
 
-/**
- * Example tool that converts text to uppercase
- */
-const upperCaseTool = createTool({
-  name: "uppercase",
-  description: "Convert text to uppercase",
-  parameters: z.object({
-    text: z.string().describe("Text to convert to uppercase"),
-  }),
-  execute: async (args) => {
-    return {
-      result: args.text.toUpperCase(),
-      length: args.text.length,
-    };
-  },
-});
+import { buildAppAdvisorAgent } from "./agents/app-advisor.agent";
 
 /**
  * VoltAgent service that manages agents and provides console integration.
@@ -36,25 +21,19 @@ export class VoltAgentService {
   private honoApp?: Hono;
 
   /**
-   * Text processing agent that can convert text to uppercase
+   * App Advisor agent that helps users navigate the platform
    */
-  public readonly textAgent: Agent;
+  public readonly appAdvisorAgent: Agent;
 
   constructor() {
-    // Initialize the text processing agent
-    this.textAgent = new Agent({
-      name: "TextAgent",
-      instructions:
-        "You are a helpful text processing assistant. When users ask you to process text, use the uppercase tool to convert it to uppercase and explain what you did.",
-      model: "openai/gpt-4o-mini",
-      tools: [upperCaseTool],
-    });
+    // Initialize the App Advisor agent
+    this.appAdvisorAgent = buildAppAdvisorAgent();
 
     // Initialize VoltAgent WITHOUT a server
     // We'll use middleware integration instead for same-port deployment
     this.voltAgent = new VoltAgent({
       agents: {
-        textAgent: this.textAgent,
+        appAdvisorAgent: this.appAdvisorAgent,
       },
       // No server property - console will be served via NestJS middleware
     });

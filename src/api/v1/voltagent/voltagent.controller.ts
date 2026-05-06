@@ -15,12 +15,11 @@ export class VoltAgentController {
     if (!body.text) {
       return {
         error: "Please provide text to process",
-        example: { text: "hello world" },
       };
     }
 
-    const result = await this.voltAgentService.textAgent.generateText(
-      `Convert this text to uppercase: ${body.text}`,
+    const result = await this.voltAgentService.appAdvisorAgent.generateText(
+      body.text,
     );
 
     return {
