@@ -7,6 +7,7 @@ import {
 } from "@nestjs/common";
 import { VoltAgentMiddleware } from "./voltagent.middleware";
 import { VoltAgentService } from "./voltagent.service";
+import { VoltAgentController } from "./voltagent.controller";
 
 /**
  * VoltAgent module that initializes agents and integrates the console via middleware.
@@ -17,6 +18,7 @@ import { VoltAgentService } from "./voltagent.service";
  */
 @Global()
 @Module({
+  controllers: [VoltAgentController],
   providers: [VoltAgentService, VoltAgentMiddleware],
   exports: [VoltAgentService],
 })
