@@ -5,6 +5,8 @@ import { AppModule } from './app.module';
 import { ForbiddenFilter } from './common/filters/forbidden.filter';
 import * as bodyParser from 'body-parser';
 import { NestExpressApplication } from '@nestjs/platform-express';
+import { VoltAgentService } from './api/v1/voltagent/voltagent.service';
+import { setupVoltAgentWebSocket } from './api/v1/voltagent/voltagent.websocket.setup';
 
 // Establecer la zona horaria para toda la app
 process.env.TZ = 'America/Bogota';
@@ -57,6 +59,14 @@ async function bootstrap() {
   console.log('   - Global Prefix: /api');
   console.log('   - Rutas disponibles: /api/v1/*, /api/v2/*, etc.');
   console.log('   - Zona horaria: America/Bogota');
+
+  app.enableShutdownHooks();
+  const voltAgentService = app.get(VoltAgentService);
+  const wss = setupVoltAgentWebSocket(app, voltAgentService, "/voltagent/ws");
+
+  app.getHttpServer().on("close", () => {
+    wss.close();
+  });
 
   await app.listen(process.env.PORT ?? 3000);
 }

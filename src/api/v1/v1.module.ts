@@ -9,19 +9,20 @@ import { ProgramsModule } from './programs/programs.module';
 import { CoursesModule } from './courses/courses.module';
 import { CommonModule } from './common/common.module';
 import { CoursesCatalogModule } from './courses/courses-catalog.module';
+import { VoltAgentModule } from './voltagent/voltagent.module';
 
 @Module({
   imports: [
     CommonModule,
+    VoltAgentModule,
     CaslModule,
     PermissionModule,
     AuthModule,
     UsersModule,
     RolesModule,
     ProgramsModule,
-    CoursesModule,    
+    CoursesModule,
     CoursesCatalogModule,
-
   ],
   controllers: [],
   providers: [],
