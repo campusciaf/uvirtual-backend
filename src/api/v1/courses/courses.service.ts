@@ -165,7 +165,7 @@ export class CoursesService {
 
     const course = this.courseRepo.create({
       program_level_id: createCourseDto.program_level_id,
-      catalog_id: null,
+      catalog_id: createCourseDto.catalog_id || null,
       code: createCourseDto.code,
       name: createCourseDto.name,
       image_url: createCourseDto.image_url || '',
