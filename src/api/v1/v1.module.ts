@@ -8,10 +8,12 @@ import { PermissionModule } from './permission/permission.module';
 import { ProgramsModule } from './programs/programs.module';
 import { CoursesModule } from './courses/courses.module';
 import { CommonModule } from './common/common.module';
+import { VoltAgentModule } from './voltagent/voltagent.module';
 
 @Module({
   imports: [
     CommonModule,
+    VoltAgentModule,
     CaslModule,
     PermissionModule,
     AuthModule,
@@ -19,6 +21,7 @@ import { CommonModule } from './common/common.module';
     RolesModule,
     ProgramsModule,
     CoursesModule,
+    CoursesCatalogModule,
   ],
   controllers: [],
   providers: [],

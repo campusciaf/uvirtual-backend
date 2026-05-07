@@ -22,6 +22,10 @@ export const envSchema = z.object({
   AWS_ACCESS_KEY_ID: z.string().optional(),
   AWS_SECRET_ACCESS_KEY: z.string().optional(),
   AWS_S3_BUCKET_NAME: z.string().optional(),
+
+  OPENAI_API_KEY: z.string({
+    error: "OPENAI_API_KEY is required for VoltAgent AI functionality",
+  }),
 });
 
 export type EnvConfig = z.infer<typeof envSchema>;
