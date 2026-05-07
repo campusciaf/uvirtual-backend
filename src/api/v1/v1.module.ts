@@ -21,7 +21,6 @@ import { VoltAgentModule } from './voltagent/voltagent.module';
     RolesModule,
     ProgramsModule,
     CoursesModule,
-    CoursesCatalogModule,
   ],
   controllers: [],
   providers: [],
