@@ -14,31 +14,31 @@ export enum TitrationType {
 }
 
 export class CreateProgramDto {
-  @IsNotEmpty()
-  @IsString()
+  @IsNotEmpty({ message: 'El código es obligatorio.' })
+  @IsString({ message: 'El código debe ser un texto.' })
   code: string;
 
-  @IsNotEmpty()
-  @IsString()
+  @IsNotEmpty({ message: 'El nombre es obligatorio.' })
+  @IsString({ message: 'El nombre debe ser un texto.' })
   name: string;
 
-  @IsNotEmpty()
-  @IsString()
+  @IsNotEmpty({ message: 'El área de conocimiento es obligatoria.' })
+  @IsString({ message: 'El área de conocimiento debe ser un texto.' })
   area_knowledge: string;
 
-  @IsNotEmpty()
-  @IsEnum(Modality)
+  @IsNotEmpty({ message: 'La modalidad es obligatoria.' })
+  @IsEnum(Modality, { message: 'La modalidad no es válida.' })
   modality: string;
 
-  @IsNotEmpty()
-  @IsEnum(TitrationType)
+  @IsNotEmpty({ message: 'El tipo de titulación es obligatorio.' })
+  @IsEnum(TitrationType, { message: 'El tipo de titulación no es válido.' })
   titration_type: string;
 
   @IsOptional()
-  @IsBoolean()
+  @IsBoolean({ message: 'El estado debe ser verdadero o falso.' })
   state?: boolean;
 
-  @IsArray()
+  @IsArray({ message: 'Los niveles deben ser una lista.' })
   @ValidateNested({ each: true })
   @Type(() => CreateProgramsLevelDto)
   levels: CreateProgramsLevelDto[];

@@ -8,7 +8,6 @@ import { PermissionModule } from './permission/permission.module';
 import { ProgramsModule } from './programs/programs.module';
 import { CoursesModule } from './courses/courses.module';
 import { CommonModule } from './common/common.module';
-import { CoursesCatalogModule } from './courses/courses-catalog.module';
 import { VoltAgentModule } from './voltagent/voltagent.module';
 
 @Module({
