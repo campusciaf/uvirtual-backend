@@ -5,7 +5,7 @@ export const getAcademicProgramsTools = () => {
   return [
     createTool({
       name: 'getMostRequestedKnowledgeAreas',
-      description: 'Obtiene una lista de las áreas de conocimiento más solicitadas o populares en la universidad.',
+      description: 'Obtiene una lista de las áreas de conocimiento más solicitadas o populares en la universidad, únicamente las que esten habilitadas y sean relevantes para el usuario que esta consultando.',
       parameters: z.object({
         limit: z.number().optional().describe('Cantidad de áreas a retornar (por defecto 5)')
       }),
