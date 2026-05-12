@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import { IsArray, IsBoolean, IsEnum, IsNotEmpty, IsOptional, IsString, ValidateNested } from 'class-validator';
+import { IsArray, IsBoolean, IsEnum, IsNotEmpty, IsOptional, IsString, ValidateNested, Validate, ValidatorConstraint, ValidatorConstraintInterface, ValidationArguments } from 'class-validator';
 import { CreateProgramsLevelDto } from './create-programs-level.dto';
 
 export enum Modality {
@@ -11,6 +11,19 @@ export enum Modality {
 export enum TitrationType {
   PROPEDEUTIC = 'PROPEDEUTIC',
   SINGLE_CYCLE = 'SINGLE_CYCLE'
+}
+
+@ValidatorConstraint({ name: 'LevelsCreditsByTitration', async: false })
+export class LevelsCreditsByTitrationConstraint implements ValidatorConstraintInterface {
+  validate(levels: any, args: ValidationArguments) {
+    const obj = args.object as any;
+    if (!Array.isArray(levels)) return false;
+    if (obj.titration_type === 'SINGLE_CYCLE') return true;
+    return levels.every(l => Number.isInteger(l?.total_credits) && l.total_credits >= 1);
+  }
+  defaultMessage() {
+    return 'El total de créditos debe ser mayor o igual a 1.';
+  }
 }
 
 export class CreateProgramDto {
@@ -41,5 +54,6 @@ export class CreateProgramDto {
   @IsArray({ message: 'Los niveles deben ser una lista.' })
   @ValidateNested({ each: true })
   @Type(() => CreateProgramsLevelDto)
+  @Validate(LevelsCreditsByTitrationConstraint)
   levels: CreateProgramsLevelDto[];
 }

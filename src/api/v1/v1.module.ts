@@ -9,6 +9,7 @@ import { ProgramsModule } from './programs/programs.module';
 import { CoursesModule } from './courses/courses.module';
 import { CommonModule } from './common/common.module';
 import { VoltAgentModule } from './voltagent/voltagent.module';
+import { ProgramLevelTypesModule } from './program-level-types/program-level-types.module';
 
 @Module({
   imports: [
@@ -21,7 +22,7 @@ import { VoltAgentModule } from './voltagent/voltagent.module';
     RolesModule,
     ProgramsModule,
     CoursesModule,
-    CoursesCatalogModule,
+    ProgramLevelTypesModule,
   ],
   controllers: [],
   providers: [],
