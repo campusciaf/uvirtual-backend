@@ -16,7 +16,7 @@ export class ProgramsService {
     private readonly dataSource: DataSource
   ) { }
   private mapModalityToFront(m: string): string {
-    switch(m) {
+    switch (m) {
       case 'PRESENTIAL': return 'presencial';
       case 'VIRTUAL': return 'virtual';
       case 'MIXED': return 'mixta';
@@ -25,46 +25,104 @@ export class ProgramsService {
   }
 
   private mapTitrationToFront(t: string): string {
-    switch(t) {
+    switch (t) {
       case 'PROPEDEUTIC': return 'propedeutico';
       case 'SINGLE_CYCLE': return 'ciclo_unico';
       default: return t?.toLowerCase();
     }
   }
-  async findAll() {
-    const programs = await this.programsRepo
-      .createQueryBuilder('p')
-      .leftJoinAndMapMany('p.levels', ProgramsLevel, 'l', 'l.program_id = p.id')
-      .orderBy('p.id', 'DESC')
-      .getMany();
 
-    return programs.map(p => {
-      // Sort levels by order
-      const sortedLevels = (p['levels'] || []).sort((a, b) => a.order - b.order);
+  async findAll(query: any) {
+    const limit = Number(query.limit ?? 10);
+    const page = Number(query.page ?? 1);
+    const skip = (page - 1) * limit;
+
+    const qb = this.programsRepo
+      .createQueryBuilder('p')
+      .leftJoinAndMapMany(
+        'p.levels',
+        ProgramsLevel,
+        'l',
+        'l.program_id = p.id'
+      )
+      .orderBy('p.id', 'DESC');
+
+    if (query.search) {
+      qb.andWhere(
+        `(p.code LIKE :search 
+        OR p.name LIKE :search 
+        OR p.area_knowledge LIKE :search 
+        OR p.modality LIKE :search 
+        OR p.titration_type LIKE :search)`,
+        { search: `%${query.search}%` }
+      );
+    }
+
+    if (query.modality) {
+      let modality = query.modality.toUpperCase();
+      if (query.modality === 'presencial') modality = 'PRESENTIAL';
+      if (query.modality === 'virtual') modality = 'VIRTUAL';
+      if (query.modality === 'mixta') modality = 'MIXED';
+      qb.andWhere('p.modality = :modality', { modality });
+    }
+
+    if (query.titration_type) {
+      let titration = query.titration_type.toUpperCase();
+      if (query.titration_type === 'propedeutico') titration = 'PROPEDEUTIC';
+      if (query.titration_type === 'ciclo_unico') titration = 'SINGLE_CYCLE';
+      qb.andWhere('p.titration_type = :titration', { titration });
+    }
+
+    if (query.state) {
+      qb.andWhere('p.state = :state', { state: query.state === 'activo' });
+    }
+
+    const [programs, total] = await qb
+      .skip(skip)
+      .take(limit)
+      .getManyAndCount();
+
+    const data = programs.map((p) => {
+      const sortedLevels = (p['levels'] || []).sort(
+        (a, b) => a.order - b.order
+      );
+
       return {
         id: p.id,
         codigo: p.code,
         nombre: p.name,
         area_conocimiento: p.area_knowledge,
         modalidad: this.mapModalityToFront(p.modality),
-        // metodologia: p.methodology,
         tipo_titulacion: this.mapTitrationToFront(p.titration_type),
         estado: p.state ? 'activo' : 'inactivo',
         total_niveles: sortedLevels.length,
-        niveles: sortedLevels.length > 0
-          ? sortedLevels.map(l => `${l.order}. ${l.level}`).join(' | ')
-          : '—',
-        niveles_data: sortedLevels.map(l => ({
+
+        niveles:
+          sortedLevels.length > 0
+            ? sortedLevels
+              .map((l) => `${l.order}. ${l.level}`)
+              .join(' | ')
+            : '—',
+
+        niveles_data: sortedLevels.map((l) => ({
           id: l.id,
           nivel: l.level,
           orden: l.order,
           titulo_otorgado: l.awarded_degree,
           duracion_semestres: l.duration_semesters,
           total_creditos: l.total_credits,
-          estado: l.status ? 'activo' : 'inactivo'
-        }))
+          estado: l.status ? 'activo' : 'inactivo',
+        })),
       };
     });
+
+    return {
+      data,
+      total,
+      currentPage: page,
+      totalPages: Math.ceil(total / limit),
+      limit,
+    };
   }
 
   async findOne(id: string) {

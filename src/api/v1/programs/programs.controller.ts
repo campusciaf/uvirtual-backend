@@ -5,11 +5,11 @@ import { UpdateProgramDto } from "./dto/update-program.dto";
 
 @Controller("programs")
 export class ProgramsController {
-  constructor(private readonly programsService: ProgramsService) {}
+  constructor(private readonly programsService: ProgramsService) { }
 
   @Get()
-  async listar() {
-    const data = await this.programsService.findAll();
+  async findAll(@Query() query: any) {
+    const data = await this.programsService.findAll(query);
     return { success: true, data, error: null };
   }
 
